@@ -246,7 +246,7 @@ func main() {
 	// This is a bug in istio-proxy and we need to workaround it for now.
 	// NOTE: The /etc/resolv.conf would contain two nameservers only momentarily until the cmd-nsc sidecar
 	// overwrites it.
-	if initDnsConfig {
+	if rootConf.LocalDNSServerEnabled && initDnsConfig {
 		// Copy the original resolv.conf to the backup directory so that the cmd-nsc sidecar can
 		// read from the backup and initialize its data structures related to dns resolution.
 		storeResolvConfigFile := "/etc/nsm-dns-config/resolv.conf.restore"
