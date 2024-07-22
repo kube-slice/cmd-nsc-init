@@ -31,6 +31,7 @@ import (
 	"os/signal"
 	"strings"
 	"syscall"
+        "time"
 
 	nested "github.com/antonfisher/nested-logrus-formatter"
 	"github.com/edwarnicke/grpcfd"
@@ -123,7 +124,7 @@ func main() {
 	if opentelemetry.IsEnabled() {
 		collectorAddress := rootConf.OpenTelemetryEndpoint
 		spanExporter := opentelemetry.InitSpanExporter(ctx, collectorAddress)
-		metricExporter := opentelemetry.InitMetricExporter(ctx, collectorAddress)
+                metricExporter := opentelemetry.InitOPTLMetricExporter(ctx, collectorAddress, 60*time.Second)
 		o := opentelemetry.Init(ctx, spanExporter, metricExporter, rootConf.Name)
 		defer func() {
 			if err := o.Close(); err != nil {
