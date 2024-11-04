@@ -31,7 +31,7 @@ import (
 	"os/signal"
 	"strings"
 	"syscall"
-        "time"
+	"time"
 
 	nested "github.com/antonfisher/nested-logrus-formatter"
 	"github.com/edwarnicke/grpcfd"
@@ -124,7 +124,7 @@ func main() {
 	if opentelemetry.IsEnabled() {
 		collectorAddress := rootConf.OpenTelemetryEndpoint
 		spanExporter := opentelemetry.InitSpanExporter(ctx, collectorAddress)
-                metricExporter := opentelemetry.InitOPTLMetricExporter(ctx, collectorAddress, 60*time.Second)
+		metricExporter := opentelemetry.InitOPTLMetricExporter(ctx, collectorAddress, 60*time.Second)
 		o := opentelemetry.Init(ctx, spanExporter, metricExporter, rootConf.Name)
 		defer func() {
 			if err := o.Close(); err != nil {
@@ -247,7 +247,9 @@ func main() {
 	// This is a bug in istio-proxy and we need to workaround it for now.
 	// NOTE: The /etc/resolv.conf would contain two nameservers only momentarily until the cmd-nsc sidecar
 	// overwrites it.
-	if rootConf.LocalDNSServerEnabled && initDnsConfig {
+	// NOTE: This is disabled by default because there could be other init containers in the pod that cannot
+	// resolve dns names if multiple nameservers are present in the resolv.conf.
+	if rootConf.LocalDNSServerEnabled && rootConf.InitLocalDNSConfig && initDnsConfig {
 		// Copy the original resolv.conf to the backup directory so that the cmd-nsc sidecar can
 		// read from the backup and initialize its data structures related to dns resolution.
 		storeResolvConfigFile := "/etc/nsm-dns-config/resolv.conf.restore"

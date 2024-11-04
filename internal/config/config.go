@@ -36,4 +36,5 @@ type Config struct {
 	LogLevel              string                  `default:"INFO" desc:"Log level" split_words:"true"`
 	OpenTelemetryEndpoint string                  `default:"otel-collector.observability.svc.cluster.local:4317" desc:"OpenTelemetry Collector Endpoint"`
 	LocalDNSServerEnabled bool                    `default:"true" desc:"Local DNS Server enabled/disabled"`
+	InitLocalDNSConfig    bool                    `default:"false" desc:"Initialize Config for the Local DNS Server in /etc/resolv.conf"`
 }
